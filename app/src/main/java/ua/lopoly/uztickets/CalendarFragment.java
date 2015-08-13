@@ -1,5 +1,6 @@
 package ua.lopoly.uztickets;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,12 +15,19 @@ import android.widget.CalendarView;
  * Created by lopoly on 12.08.2015.
  */
 public class CalendarFragment extends Fragment {
+    public static final String EXTRA_DATE = "ua.lopoly.uz.date";
     private CalendarView mCalendarView;
     String selectedDate;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    public void returnResult(String date) {
+        Intent i = new Intent();
+        i.putExtra(EXTRA_DATE, date);
+        getActivity().setResult(Activity.RESULT_OK, i);
     }
 
 
@@ -40,8 +48,7 @@ public class CalendarFragment extends Fragment {
                         .append(".").append(mMonth + 1).append(".").append(mYear)
                         .append(" ").toString();
 
-                StationsFragment.mFormData.setDateDep(selectedDate);
-                Log.d("Date", StationsFragment.mFormData.toString());
+                returnResult(selectedDate);
             }
         });
 

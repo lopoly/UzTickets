@@ -32,5 +32,6 @@
         <item>22:00</item>
         <item>23:00</item>
     </string-array>
+    <string name="trains_list">Trains List</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package ua.lopoly.uztickets;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -25,15 +26,16 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by lopoly on 10.08.2015.
  */
 public class StationsFragment extends Fragment {
+    private final static String TAG = "StationFragment";
     private final String STATION_SEARCH_URL = "http://booking.uz.gov.ua/purchase/station/";
     private final String DEBUG_TAG = "fetch";
+    private static final int REQUEST_DATE = 0;
     private AutoCompleteTextView mFrom;
     private AutoCompleteTextView mTill;
     private StationResponse sr;
@@ -51,11 +53,20 @@ public class StationsFragment extends Fragment {
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) return;
+        if (requestCode == REQUEST_DATE) {
+            String date = data.getStringExtra(CalendarFragment.EXTRA_DATE);
+            mFormData.setDateDep(date);
+            mDateButton.setText(date);
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.search_fragment, container, false);
+        View v = inflater.inflate(R.layout.stations_fragment, container, false);
         Date mDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("d.MM.yy");
         String today = dateFormat.format(mDate);
@@ -66,9 +77,11 @@ public class StationsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), CalendarActivity.class);
-                startActivity(i);
+                startActivityForResult(i, REQUEST_DATE);
             }
         });
+
+
 
         mTime = (Spinner)v.findViewById(R.id.time_spinner);
         final ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource
@@ -180,8 +193,8 @@ public class StationsFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                    new FetchTrainsTask().execute();
-
+                Intent i = new Intent();
+                startActivity(i);
 
             }
         });
@@ -236,23 +249,4 @@ public class StationsFragment extends Fragment {
         }
 
     }
-
-    private class FetchTrainsTask extends AsyncTask<String, Void, String>{
-
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                return new TrainFetcher().getUrlString();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "Unable to retrieve web page. URL may be invalid.";
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            Log.d("WORK", s);
-        }
-    }
-
 }
