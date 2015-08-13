@@ -13,12 +13,11 @@ import java.net.URL;
  * Created by lopoly on 12.08.2015.
  */
 public class TrainFetcher {
-    private HtmlParser parser;
 
-    public String getUrlString() throws IOException {
 
-        parser = new HtmlParser();
-        parser.getHeaders();
+    public String getUrlString() throws IOException{
+
+        HtmlParser parser = new HtmlParser().getHeaders();
 
 
         final String url = "http://booking.uz.gov.ua/purchase/search/";
@@ -30,7 +29,7 @@ public class TrainFetcher {
         con.setRequestProperty("Referer", "http://booking.uz.gov.ua/");
         con.setRequestProperty("GV-Token", parser.getGvToken());
         con.setRequestProperty("GV-Ajax", "1");
-        con.setRequestProperty("Cookie",parser.getSessionId() + "; _gv_lang=uk;" +
+        con.setRequestProperty("Cookie", "_gv_sessid="+parser.getSessionId() + "; _gv_lang=uk;" +
                 "HTTPSERVERID=server2; __utmt=1;" +
                 " __utma=31515437.46774957.1429278713.1429291416.1429346067.4;" +
                 " __utmb=31515437.1.10.1429346067; __utmc=31515437;" +
@@ -39,8 +38,6 @@ public class TrainFetcher {
 
         String urlParameters = StationsFragment.mFormData.toString();
 
-
-
         con.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
         wr.writeBytes(urlParameters);
@@ -48,7 +45,6 @@ public class TrainFetcher {
         wr.close();
 
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
         String inputLine;
         StringBuilder response = new StringBuilder();
 

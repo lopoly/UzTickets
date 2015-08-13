@@ -33,5 +33,16 @@
         <item>23:00</item>
     </string-array>
     <string name="trains_list">Trains List</string>
+    <string name="trainNumber">Train №</string>
+    <string name="from">Departure</string>
+    <string name="till">Arrival</string>
+    <string name="dateFrom">Date and Time of \n Departure</string>
+    <string name="dateTill">Date and Time of \n Arrival</string>
+    <string name="tripDuration">Trip Duration</string>
+    <string name="freePlaces">Free Places</string>
+
+
+
+
 
 </resources>

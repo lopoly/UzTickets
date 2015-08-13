@@ -39,6 +39,7 @@ public class StationsFragment extends Fragment {
     private AutoCompleteTextView mFrom;
     private AutoCompleteTextView mTill;
     private StationResponse sr;
+
     private ArrayAdapter adapterFrom;
     private ArrayAdapter adapterTill;
     private ProgressBar mProgressBar;
@@ -73,6 +74,7 @@ public class StationsFragment extends Fragment {
 
         mDateButton = (Button)v.findViewById(R.id.btnDate);
         mDateButton.setText(today);
+        mFormData.setDateDep(today);
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -192,8 +194,7 @@ public class StationsFragment extends Fragment {
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent i = new Intent();
+                Intent i = new Intent(getActivity(), SearchActivity.class);
                 startActivity(i);
 
             }
@@ -249,4 +250,6 @@ public class StationsFragment extends Fragment {
         }
 
     }
+
 }
+

@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class TrainsResponse {
 
     @JsonProperty("value")
-    private List<Value> value = new ArrayList<Value>();
+    private ArrayList<Value> value;
     @JsonProperty("error")
     private Boolean error;
     @JsonProperty("data")
@@ -35,7 +35,7 @@ public class TrainsResponse {
      *     The value
      */
     @JsonProperty("value")
-    public List<Value> getValue() {
+    public ArrayList<Value> getValue() {
         return value;
     }
 
@@ -45,7 +45,7 @@ public class TrainsResponse {
      *     The value
      */
     @JsonProperty("value")
-    public void setValue(List<Value> value) {
+    public void setValue(ArrayList<Value> value) {
         this.value = value;
     }
 
