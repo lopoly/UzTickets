@@ -1,6 +1,7 @@
 package ua.lopoly.uztickets;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,7 +41,9 @@ public class StationsFragment extends Fragment {
     private ArrayAdapter adapterTill;
     private ProgressBar mProgressBar;
     private Button mDateButton;
+    private Button mSearchButton;
     private Spinner mTime;
+    static FormData mFormData = new FormData();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,12 +62,30 @@ public class StationsFragment extends Fragment {
 
         mDateButton = (Button)v.findViewById(R.id.btnDate);
         mDateButton.setText(today);
+        mDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), CalendarActivity.class);
+                startActivity(i);
+            }
+        });
 
         mTime = (Spinner)v.findViewById(R.id.time_spinner);
         final ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource
                 (getActivity(), R.array.hours, android.R.layout.simple_spinner_dropdown_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mTime.setAdapter(spinnerAdapter);
+        mTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mFormData.setTimeDep(mTime.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         mProgressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
 
@@ -105,6 +126,12 @@ public class StationsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mFrom.clearFocus();
                 mTill.requestFocus();
+
+                mFormData.setFrom(adapterFrom.getItem(position).toString());
+                Station mFromId = (Station) adapterFrom.getItem(position);
+                mFormData.setIdFrom(mFromId.getStationId());
+                Log.d(DEBUG_TAG, adapterFrom.getItem(position).toString() + " " + mFromId.getStationId());
+
             }
         });
 
@@ -138,6 +165,27 @@ public class StationsFragment extends Fragment {
                 }
             }
         });
+        mTill.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mFormData.setTill(adapterTill.getItem(position).toString());
+                Station mTillId = (Station) adapterTill.getItem(position);
+                mFormData.setIdTill(mTillId.getStationId());
+                Log.d(DEBUG_TAG, adapterTill.getItem(position).toString() + " " + mTillId.getStationId());
+            }
+        });
+
+        mSearchButton = (Button)v.findViewById(R.id.btnSearch);
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    new FetchTrainsTask().execute();
+
+
+            }
+        });
+
         return v;
 
     }
@@ -187,6 +235,24 @@ public class StationsFragment extends Fragment {
 
         }
 
+    }
+
+    private class FetchTrainsTask extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                return new TrainFetcher().getUrlString();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "Unable to retrieve web page. URL may be invalid.";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Log.d("WORK", s);
+        }
     }
 
 }
