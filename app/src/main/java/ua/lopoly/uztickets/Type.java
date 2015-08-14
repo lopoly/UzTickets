@@ -89,12 +89,7 @@ public class Type {
 
     @Override
     public String toString() {
-        return "Type{" +
-                "title='" + title + '\'' +
-                ", letter='" + letter + '\'' +
-                ", places=" + places +
-                ", additionalProperties=" + additionalProperties +
-                '}';
+        return letter + " " + places + " ";
     }
 
     @JsonAnyGetter

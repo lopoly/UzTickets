@@ -16,7 +16,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lopoly on 13.08.2015.
@@ -49,6 +52,25 @@ public class SearchFragment extends android.app.ListFragment {
 
             TextView trainNumber = (TextView)convertView.findViewById(R.id.train_number);
             trainNumber.setText(v.getNum());
+            TextView departure = (TextView)convertView.findViewById(R.id.departure);
+            departure.setText(v.getFrom().getStation());
+            TextView arrival = (TextView)convertView.findViewById(R.id.arrival);
+            arrival.setText(v.getTill().getStation());
+            TextView timeDep = (TextView)convertView.findViewById(R.id.time_dep);
+            timeDep.setText(new SimpleDateFormat("E, d MMM yyyy\nkk:mm:ss").format(new Date(v.getFrom().getDate()).getTime()*1000));
+            TextView timeTill = (TextView)convertView.findViewById(R.id.time_till);
+            timeTill.setText(new SimpleDateFormat("E, d MMM yyyy\nkk:mm:ss").format(new Date(v.getTill().getDate()).getTime()*1000));
+            TextView freePlaces = (TextView)convertView.findViewById(R.id.free_places);
+            String s = " ";
+            for (int i=0; i<v.getTypes().size(); i++){
+                s += new StringBuilder().append(" ").append(v.getTypes().get(i).toString());
+            }
+            freePlaces.setText(s);
+            TextView duration = (TextView)convertView.findViewById(R.id.trip_duration);
+            long millis = (v.getTill().getDate()*1000)-(v.getFrom().getDate()*1000);
+            String hours = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+                    TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1));
+            duration.setText(hours);
 
 
 
